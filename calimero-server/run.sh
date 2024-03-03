@@ -4,12 +4,16 @@ KNX_ADDRESS=$(bashio::config 'knx_address')
 CLIENT_ADDRESS_START=$(bashio::config 'client_address_start')
 CLIENT_ADDRESS_COUNT=$(bashio::config 'client_address_count')
 INTERFACE_TYPE=$(bashio::config 'interface_type')
+MEDIUM=$(bashio::config 'medium')
+DOMAIN_ADDRESS=$(bashio::config 'domain_address')
+IP_ADDRESS=$(bashio::config 'ip_address')
 SERIAL_DEVICE=$(bashio::config 'serial_device')
 USB_DEVICE=$(bashio::config 'usb_device')
 ROUTING=$(bashio::config 'routing')
 
 # try to handle missing serial device config
-if bashio::config.is_empty 'serial_device'; then
+if [ "$INTERFACE_TYPE" = "ft12-cemi" ] || [ "$INTERFACE_TYPE" = "tpuart" ] || [ "$INTERFACE_TYPE" = "usb" ]; then
+ if bashio::config.is_empty 'serial_device'; then
     echo "serial device config missing!\n"
     # Raspberry Pi 3 / 4
     if [ -e "/dev/ttyAMA0" ]; then
@@ -22,6 +26,7 @@ if bashio::config.is_empty 'serial_device'; then
         exit
     fi
     echo "trying with: $SERIAL_DEVICE\n"
+ fi
 fi
 
 ADD_KNX_SOURCE_OVERRIDE=""
@@ -53,9 +58,15 @@ CONFIG_XML="$CONFIG_XML
 		<knxSubnet type=\"tpuart\" medium=\"tp1\">$SERIAL_DEVICE</knxSubnet>"
 fi
 if [ "$INTERFACE_TYPE" = "usb" ]; then
-CONFIG_XML="$CONFIG_XML
+ if bashio::config.exists 'medium'; then
+   CONFIG_XML="$CONFIG_XML
+		<knxSubnet type=\"usb\" medium=\"$MEDIUM\">$USB_DEVICE</knxSubnet>"
+ else
+   CONFIG_XML="$CONFIG_XML
 		<knxSubnet type=\"usb\" medium=\"tp1\">$USB_DEVICE</knxSubnet>"
+ fi
 fi
+
 CONFIG_XML="$CONFIG_XML
 		<!-- KNX group address filter applied by the server for this service container (optional) -->
 		<groupAddressFilter>
