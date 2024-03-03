@@ -51,15 +51,15 @@ CONFIG_XML="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 		<knxAddress type=\"individual\">$KNX_ADDRESS</knxAddress>"
 if [ "$INTERFACE_TYPE" = "udp" ]; then
 CONFIG_XML="$CONFIG_XML
-		<knxSubnet type=\"udp\" listenNetIf=\"eth4\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+		<knxSubnet type=\"udp\" $ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
 fi
 if [ "$INTERFACE_TYPE" = "tcp" ]; then
 CONFIG_XML="$CONFIG_XML
-		<knxSubnet type=\"tcp\" listenNetIf=\"eth4\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+		<knxSubnet type=\"tcp\" $ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
 fi
 if [ "$INTERFACE_TYPE" = "knxip" ]; then
 CONFIG_XML="$CONFIG_XML
-		<knxSubnet type=\"knxip\" listenNetIf=\"eth4\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+		<knxSubnet type=\"knxip\" listenNetIf=\"any\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
 fi
 if [ "$INTERFACE_TYPE" = "ft12-cemi" ]; then
 CONFIG_XML="$CONFIG_XML
