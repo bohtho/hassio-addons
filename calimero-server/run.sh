@@ -12,7 +12,7 @@ USB_DEVICE=$(bashio::config 'usb_device')
 ROUTING=$(bashio::config 'routing')
 
 # try to handle missing serial device config
-if [ "$INTERFACE_TYPE" = "ft12-cemi" ] || [ "$INTERFACE_TYPE" = "tpuart" ] || [ "$INTERFACE_TYPE" = "usb" ]; then
+if [ "$INTERFACE_TYPE" = "ft12-cemi" ] || [ "$INTERFACE_TYPE" = "tpuart" ]; then
  if bashio::config.is_empty 'serial_device'; then
     echo "serial device config missing!\n"
     # Raspberry Pi 3 / 4
@@ -49,6 +49,18 @@ CONFIG_XML="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 	<serviceContainer activate=\"true\" routing=\"$ROUTING\" networkMonitoring=\"true\"
 		udpPort=\"3671\" listenNetIf=\"end0\">
 		<knxAddress type=\"individual\">$KNX_ADDRESS</knxAddress>"
+if [ "$INTERFACE_TYPE" = "udp" ]; then
+CONFIG_XML="$CONFIG_XML
+		<knxSubnet type=\"udp\" listenNetIf=\"eth4\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+fi
+if [ "$INTERFACE_TYPE" = "tcp" ]; then
+CONFIG_XML="$CONFIG_XML
+		<knxSubnet type=\"tcp\" listenNetIf=\"eth4\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+fi
+if [ "$INTERFACE_TYPE" = "knxip" ]; then
+CONFIG_XML="$CONFIG_XML
+		<knxSubnet type=\"knxip\" listenNetIf=\"eth4\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+fi
 if [ "$INTERFACE_TYPE" = "ft12-cemi" ]; then
 CONFIG_XML="$CONFIG_XML
 		<knxSubnet type=\"ft12\" medium=\"tp1\" format=\"cemi\"$ADD_KNX_SOURCE_OVERRIDE>$SERIAL_DEVICE</knxSubnet>"
@@ -60,7 +72,7 @@ fi
 if [ "$INTERFACE_TYPE" = "usb" ]; then
  if bashio::config.exists 'medium'; then
    CONFIG_XML="$CONFIG_XML
-		<knxSubnet type=\"usb\" medium=\"$MEDIUM\">$USB_DEVICE</knxSubnet>"
+		<knxSubnet type=\"usb\" medium=\"$MEDIUM\" domainAddress=\"$DOMAIN_ADDRESS\">$USB_DEVICE</knxSubnet>"
  else
    CONFIG_XML="$CONFIG_XML
 		<knxSubnet type=\"usb\" medium=\"tp1\">$USB_DEVICE</knxSubnet>"
