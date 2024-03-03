@@ -135,4 +135,8 @@ if ! bashio::config.is_empty 'loglevel' && ! bashio::config.equals 'loglevel' 'o
     ADD_LOGGING=" -Dorg.slf4j.simpleLogger.defaultLogLevel=$(bashio::config 'loglevel')"
 fi
 
-exec /opt/jdk/bin/java -XX:+UseShenandoahGC -cp "/opt/calimero/*"$ADD_LOGGING -Dgnu.io.rxtx.SerialPorts=$SERIAL_DEVICE io.calimero.server.Launcher --no-stdin /etc/server-config.xml
+if bashio::config.is_empty 'serial_device'; then
+    exec /opt/jdk/bin/java -XX:+UseShenandoahGC -cp "/opt/calimero/*"$ADD_LOGGING io.calimero.server.Launcher --no-stdin /etc/server-config.xml
+else
+    exec /opt/jdk/bin/java -XX:+UseShenandoahGC -cp "/opt/calimero/*"$ADD_LOGGING -Dgnu.io.rxtx.SerialPorts=$SERIAL_DEVICE io.calimero.server.Launcher --no-stdin /etc/server-config.xml
+fi
