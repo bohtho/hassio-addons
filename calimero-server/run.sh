@@ -12,7 +12,7 @@ USB_DEVICE=$(bashio::config 'usb_device')
 ROUTING=$(bashio::config 'routing')
 
 # try to handle missing serial device config
-if [ "$INTERFACE_TYPE" = "ft12-cemi" ] || [ "$INTERFACE_TYPE" = "tpuart" ]; then
+if [ "$INTERFACE_TYPE" = "ft12-cemi" || "$INTERFACE_TYPE" = "tpuart" ]; then
  if bashio::config.is_empty 'serial_device'; then
     echo "serial device config missing!\n"
     # Raspberry Pi 3 / 4
@@ -20,9 +20,9 @@ if [ "$INTERFACE_TYPE" = "ft12-cemi" ] || [ "$INTERFACE_TYPE" = "tpuart" ]; then
         SERIAL_DEVICE="/dev/ttyAMA0"
     # ODROID C4 / Asus Tinker Board S
     elif [ -e "/dev/ttyS1" ]; then
-        SERIAL_DEVICE=="/dev/ttyS1"
+        SERIAL_DEVICE="/dev/ttyS1"
     else
-        echo "fix config an restart!\n"
+        echo "fix config and restart!\n"
         exit
     fi
     echo "trying with: $SERIAL_DEVICE\n"
@@ -70,7 +70,7 @@ CONFIG_XML="$CONFIG_XML
 		<knxSubnet type=\"tpuart\" medium=\"tp1\">$SERIAL_DEVICE</knxSubnet>"
 fi
 if [ "$INTERFACE_TYPE" = "usb" ]; then
- if bashio::config.exists 'medium'; then
+ if [ "$MEDIUM" = "rf" ]; then
    CONFIG_XML="$CONFIG_XML
 		<knxSubnet type=\"usb\" medium=\"$MEDIUM\" domainAddress=\"$DOMAIN_ADDRESS\">$USB_DEVICE</knxSubnet>"
  else
