@@ -50,8 +50,16 @@ CONFIG_XML="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 		udpPort=\"3671\">
 		<knxAddress type=\"individual\">$KNX_ADDRESS</knxAddress>"
 if [ "$INTERFACE_TYPE" = "udp" ]; then
-CONFIG_XML="$CONFIG_XML
+ if [ "$MEDIUM" = "rf" ]; then
+   CONFIG_XML="$CONFIG_XML
+		<knxSubnet type=\"udp\" medium=\"$MEDIUM\" domainAddress=\"$DOMAIN_ADDRESS\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+  elif [ "$MEDIUM" = "knxip" ]; then
+   CONFIG_XML="$CONFIG_XML
+                <knxSubnet type=\"udp\" medium=\"$MEDIUM\"$ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+  else
+   CONFIG_XML="$CONFIG_XML
 		<knxSubnet type=\"udp\" $ADD_KNX_SOURCE_OVERRIDE>$IP_ADDRESS</knxSubnet>"
+ fi
 fi
 if [ "$INTERFACE_TYPE" = "tcp" ]; then
 CONFIG_XML="$CONFIG_XML
