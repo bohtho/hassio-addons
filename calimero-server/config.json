@@ -1,6 +1,6 @@
 {
   "name": "Calimero KNXnet/IP Server",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "slug": "calimero_server",
   "description": "A KNXnet/IP server for running your own KNXnet/IP server in software accessing the KNX bus by KNXnet/IP, KNX IP, FT1.2, TPUART or USB (incl. RF) bus adapters",
   "arch": ["aarch64"],
@@ -16,9 +16,6 @@
     "client_address_start": "0.1.101",
     "client_address_count": 5,
     "interface_type": "udp",
-	"medium": "",
-	"domain_address": "",
-	"serial_device": "",
 	"ip_address": "192.168.50.142",
 	"routing": false,
     "knx_source_override": false
