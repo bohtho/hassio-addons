@@ -144,7 +144,7 @@ if ! bashio::config.is_empty 'loglevel' && ! bashio::config.equals 'loglevel' 'o
 fi
 
 if bashio::config.is_empty 'serial_device'; then
-    exec /opt/jdk/bin/java -XX:+UseShenandoahGC -cp "/opt/calimero/*"$ADD_LOGGING io.calimero.server.Launcher --no-stdin /etc/server-config.xml
+    exec /opt/jdk/bin/java -XX:+UseShenandoahGC -cp "/opt/calimero/*"$ADD_LOGGING io.calimero.server.Launcher --lte --no-stdin /etc/server-config.xml
 else
-    exec /opt/jdk/bin/java -XX:+UseShenandoahGC -cp "/opt/calimero/*"$ADD_LOGGING -Dgnu.io.rxtx.SerialPorts=$SERIAL_DEVICE io.calimero.server.Launcher --no-stdin /etc/server-config.xml
+    exec /opt/jdk/bin/java -XX:+UseShenandoahGC -cp "/opt/calimero/*"$ADD_LOGGING -Dgnu.io.rxtx.SerialPorts=$SERIAL_DEVICE io.calimero.server.Launcher --lte --no-stdin /etc/server-config.xml
 fi
